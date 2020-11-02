@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 
 const App = () => {
-  const [wrappings, setWrappings] = useState({ prepend: '"', append: '"' });
+  const [wrappings, setWrappings] = useState({ prepend: "", append: "" });
   const [delimiter, setDelimiter] = useState(",");
   const [textCase, setTextCase] = useState("none");
   const [inputData, setInputData] = useState("");
@@ -16,7 +16,7 @@ const App = () => {
     const classType = document.getElementsByName("caseType");
     const inputData = document.getElementsByClassName("main-input")[0];
     const trimedChecked = document.getElementById("trimCheck");
-    console.log(trimedChecked.checked);
+
     setWrappings({
       prepend: `${prependValue.value}`,
       append: `${appendValue.value}`,
@@ -44,6 +44,45 @@ const App = () => {
     }
   };
 
+  const setDefalutDropDown = () => {
+    const prependValue = document.getElementById("prepend");
+    const appendValue = document.getElementById("append");
+    const defaltDropDown = document.getElementById("defaults");
+
+    switch (defaltDropDown.options[defaltDropDown.selectedIndex].value) {
+      case '"':
+        setWrappings({ prepend: '"', append: '"' });
+        prependValue.value = '"';
+        appendValue.value = '"';
+        break;
+      case "'":
+        setWrappings({ prepend: "'", append: "'" });
+        prependValue.value = "'";
+        appendValue.value = "'";
+        break;
+      case "()":
+        setWrappings({ prepend: "(", append: ")" });
+        prependValue.value = "(";
+        appendValue.value = ")";
+        break;
+      case "[]":
+        setWrappings({ prepend: "[", append: "]" });
+        prependValue.value = "[";
+        appendValue.value = "]";
+        break;
+      case "":
+        setWrappings({ prepend: "", append: "" });
+        prependValue.value = "";
+        appendValue.value = "";
+        break;
+      default:
+        setWrappings({ prepend: "", append: "" });
+        prependValue.value = "";
+        appendValue.value = "";
+        break;
+    }
+  };
+
   const convertText = () => {
     setUserValues();
     let finalData = "";
@@ -52,7 +91,6 @@ const App = () => {
     let inputDataArr = inputData.split(/\r?\n/);
 
     if (isChecked) {
-      //isChecked is true but wont activate
       trimedDataArr = inputDataArr.map((word) => {
         return word.trim();
       });
@@ -153,6 +191,15 @@ const App = () => {
       <br />
       <input type="checkbox" id="trimCheck" onChange={setUserValues} />
       <label htmlFor="trimCheckBox">Trim WhiteSpace</label>
+      <br />
+      <label htmlFor="defaults">Select a defalut prefix and suffix: </label>
+      <select name="defaults" id="defaults" onChange={setDefalutDropDown}>
+        <option value="">Prepend/Append: nothing</option>
+        <option value="'">Prepend/Append: 'single quote'</option>
+        <option value='"'>Prepend/Append: "double quote"</option>
+        <option value="()">Prepend/Append: (parentheses)</option>
+        <option value="[]">Prepend/Append: [square brackets]</option>
+      </select>
       <br />
       <div className="buttons">
         <button onClick={convertText}>Convert Text</button>
