@@ -7,6 +7,7 @@ const App = () => {
   const [textCase, setTextCase] = useState("none");
   const [inputData, setInputData] = useState("");
   const [outputData, setOutputData] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
 
   const setUserValues = () => {
     const prependValue = document.getElementById("prepend");
@@ -14,12 +15,15 @@ const App = () => {
     const delimiterValue = document.getElementById("delimiter");
     const classType = document.getElementsByName("caseType");
     const inputData = document.getElementsByClassName("main-input")[0];
+    const trimedChecked = document.getElementById("trimCheck");
+    console.log(trimedChecked.checked);
     setWrappings({
       prepend: `${prependValue.value}`,
       append: `${appendValue.value}`,
     });
     setDelimiter(`${delimiterValue.value}`);
     setInputData(inputData.value);
+    setIsChecked(trimedChecked.checked);
     for (let i = 0; i < 3; i++) {
       if (classType[i].checked) {
         switch (classType[i].id) {
@@ -43,27 +47,39 @@ const App = () => {
   const convertText = () => {
     setUserValues();
     let finalData = "";
-    let inputDataArr = inputData.split(/\r?\n/).map((word) => {
-      return `${wrappings.prepend}${word}${wrappings.append}`;
+    let trimedDataArr;
+    let apendedDataArr;
+    let inputDataArr = inputData.split(/\r?\n/);
+
+    if (isChecked) {
+      //isChecked is true but wont activate
+      trimedDataArr = inputDataArr.map((word) => {
+        return word.trim();
+      });
+    } else {
+      trimedDataArr = [...inputDataArr];
+    }
+
+    apendedDataArr = trimedDataArr.map((word) => {
+      return wrappings.prepend + word + wrappings.append;
     });
 
     if (textCase === "LowerCase") {
-      finalData = inputDataArr
+      finalData = apendedDataArr
         .map((word) => {
           return word.toLowerCase();
         })
         .join(delimiter);
     } else if (textCase === "UpperCase") {
-      finalData = inputDataArr
+      finalData = apendedDataArr
         .map((word) => {
           return word.toUpperCase();
         })
         .join(delimiter);
     } else {
-      finalData = inputDataArr.join(delimiter);
+      finalData = apendedDataArr.join(delimiter);
     }
     setOutputData(finalData);
-    console.log("complete", inputDataArr);
   };
 
   const clearBoxes = () => {
@@ -87,7 +103,6 @@ const App = () => {
         <input
           type="text"
           id="prepend"
-          name="prepend"
           defaultValue={wrappings.prepend}
           onChange={setUserValues}
         />
@@ -96,7 +111,6 @@ const App = () => {
         <input
           type="text"
           id="append"
-          name="apend"
           defaultValue={wrappings.append}
           onChange={setUserValues}
         />
@@ -105,14 +119,13 @@ const App = () => {
         <input
           type="text"
           id="delimiter"
-          name="delimiter"
           defaultValue={delimiter}
           onChange={setUserValues}
         />
       </form>
       <form>
         <p>Select Case Type:</p>
-        <label htmlFor="none">No Change: </label>
+        <label htmlFor="none">No Change:</label>
         <input
           type="radio"
           id="none"
@@ -121,7 +134,7 @@ const App = () => {
           onChange={setUserValues}
         />
         <br />
-        <label htmlFor="LowerCase">Lower Case: </label>
+        <label htmlFor="LowerCase">Lower Case:</label>
         <input
           type="radio"
           id="LowerCase"
@@ -129,7 +142,7 @@ const App = () => {
           onChange={setUserValues}
         />
         <br />
-        <label htmlFor="UpperCase">Upper Case: </label>
+        <label htmlFor="UpperCase">Upper Case:</label>
         <input
           type="radio"
           id="UpperCase"
@@ -138,7 +151,10 @@ const App = () => {
         />
       </form>
       <br />
-      <div classname="buttons">
+      <input type="checkbox" id="trimCheck" onChange={setUserValues} />
+      <label htmlFor="trimCheckBox">Trim WhiteSpace</label>
+      <br />
+      <div className="buttons">
         <button onClick={convertText}>Convert Text</button>
         <br />
         <button onClick={clearBoxes}>Clear All</button>
@@ -152,7 +168,7 @@ const App = () => {
         onChange={setUserValues}
       ></textarea>
       <br />
-      <textarea className="text-output" value={outputData}></textarea>
+      <textarea className="text-output" value={outputData} readOnly></textarea>
     </div>
   );
 };
