@@ -9,4 +9,28 @@ textarea {
 
 input[type="text"] {
   width: 40px;
+  margin-right: 20px;
+}
+
+input[type="radio"] {
+  margin-left: 20px;
+}
+
+form {
+  margin-bottom: 10px;
+}
+
+.formContainer {
+  display: grid;
+  grid-template-columns: 80vw auto;
+  margin-top: 10px;
+}
+
+.buttons {
+  justify-self: flex-start;
+}
+button {
+  width: 10vw;
+  height: 25%;
+  margin-bottom: 5%;
 }
