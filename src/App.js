@@ -206,8 +206,8 @@ const App = () => {
               name="defaults"
               defaultChecked={true}
               onChange={setUserValues}
+              hidden
             />
-            <label htmlFor="typeIn">Type In</label>
 
             <input
               type="radio"
