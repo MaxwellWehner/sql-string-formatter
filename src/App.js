@@ -90,13 +90,16 @@ const App = () => {
     let trimedDataArr;
     let apendedDataArr;
     let inputDataArr = inputData.split(/\r?\n/);
+    let inputDataArrNoSpace = inputDataArr.filter(function (word) {
+      return word !== "";
+    });
 
     if (isChecked) {
-      trimedDataArr = inputDataArr.map((word) => {
+      trimedDataArr = inputDataArrNoSpace.map((word) => {
         return word.trim();
       });
     } else {
-      trimedDataArr = [...inputDataArr];
+      trimedDataArr = [...inputDataArrNoSpace];
     }
 
     apendedDataArr = trimedDataArr.map((word) => {
